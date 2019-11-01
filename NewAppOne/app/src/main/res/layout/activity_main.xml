@@ -14,7 +14,23 @@
         android:layout_marginLeft="32dp"
         android:layout_marginTop="100dp"
         android:text="@string/calcButton"
+        app:layout_constraintEnd_toStartOf="@+id/mapButton"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/mapButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/calcButton"
+        app:layout_constraintTop_toTopOf="@+id/calcButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
