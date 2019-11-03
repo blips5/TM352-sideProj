@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val calcButton = findViewById<Button>(R.id.calcButton)
         val mapButton = findViewById<Button>(R.id.mapButton)
+        val calendarButton = findViewById<Button>(R.id.calendarButton)
 
         calcButton.setOnClickListener(){
             val intent = Intent(this, Calculator::class.java)
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity() {
 
         mapButton.setOnClickListener(){
             val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent)
+        }
+
+        calendarButton.setOnClickListener(){
+            val intent = Intent(this, CalendarActivity::class.java)
             startActivity(intent)
         }
 
