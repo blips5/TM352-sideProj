@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         val mapButton = findViewById<Button>(R.id.mapButton)
         val calendarButton = findViewById<Button>(R.id.calendarButton)
 
+
         calcButton.setOnClickListener(){
             val intent = Intent(this, Calculator::class.java)
             startActivity(intent)
