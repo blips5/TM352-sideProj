@@ -19,10 +19,10 @@ allprojects {
     repositories {
         google()
         jcenter()
-<<<<<<< Updated upstream
+
         
-=======
->>>>>>> Stashed changes
+
+
     }
 }
 
