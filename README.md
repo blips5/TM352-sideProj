@@ -2,7 +2,7 @@
 
 <h1 align="center">
   <br>
-  <img src="https://github.com/LHussell/TM352-sideProj/blob/master/tmPro.png" alt="" width="200px" height="200px">
+  <img src="https://github.com/LHussell/TM352-sideProj/blob/master/tmPro.PNG" alt="" width="130px" height="220px">
   <br>
 </h1>
 
