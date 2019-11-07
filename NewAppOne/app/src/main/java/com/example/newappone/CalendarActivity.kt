@@ -1,7 +1,9 @@
 
 package com.example.newappone
 
-
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import android.icu.util.Calendar.MONDAY
 import android.os.Build
 import android.os.Bundle
@@ -13,9 +15,14 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class CalendarActivity : AppCompatActivity() {
+
+    private var db: AppDatabase? = null
+    private var notesDao: NotesDao? = null
+
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +37,12 @@ class CalendarActivity : AppCompatActivity() {
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
         val noteAdd = findViewById<Button>(R.id.noteAdd)
 
-        //Sets the calenderview to have Monday as the first day of the week.
+        db = AppDatabase.getAppDataBase(context = this)
+        notesDao = db?.notesDao()
+
+
+
+        //Sets the calenderView to have Monday as the first day of the week.
         calendarView.firstDayOfWeek = MONDAY
 
         //Makes the editable note box and noteAdd button invisible from the start until
@@ -58,14 +70,38 @@ class CalendarActivity : AppCompatActivity() {
                 noteBox.visibility = View.VISIBLE
             }
         }
+        noteAdd.setOnClickListener {
+            // Collects input data
+            var noteText = editNote.text.toString()
 
-        noteAdd.setOnClickListener{
-            noteBox.append("\n" + editNote.text)
-            editNote.text.clear()
+            //noteBox.append("\n" + noteText)
             editNote.visibility = View.INVISIBLE
             noteAdd.visibility = View.INVISIBLE
             noteBox.visibility = View.VISIBLE
+
+
+            Observable.fromCallable{
+                var notes = Notes(name = noteText)
+
+                with(notesDao) {
+                    this?.insertNote(notes)
+                }
+                db?.notesDao()?.getNotes()
+            }.doOnNext{
+                    // prints full list of notes in the database table Notes
+                    // needs changing to get a single note by date
+                    list -> var finalString = " "
+                list?.map { finalString+= it.name+ " - "}
+                // Adds string to note box
+                noteBox.text = finalString
+
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+            editNote.text.clear()
         }
 
-    }
+
+
+        }
 }

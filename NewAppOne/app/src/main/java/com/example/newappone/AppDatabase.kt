@@ -1,11 +1,9 @@
 package com.example.newappone
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-
-
+import android.content.Context
 
 @Database(entities = [Notes::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
@@ -13,7 +11,7 @@ abstract class AppDatabase : RoomDatabase() {
 
 
     companion object {
-        var INSTANCE: AppDatabase? = null
+        private var INSTANCE: AppDatabase? = null
 
         fun getAppDataBase(context: Context): AppDatabase? {
             if(INSTANCE == null)
@@ -26,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
 
-        fun destroyDatabase()
+        fun destroyDataBase()
         {
             INSTANCE = null
         }
