@@ -13,9 +13,15 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.Observable
 
 
 class CalendarActivity : AppCompatActivity() {
+
+
+    private var db: AppDatabase? = null
+    private var notesDao: NotesDao? = null
+
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +66,26 @@ class CalendarActivity : AppCompatActivity() {
         }
 
         noteAdd.setOnClickListener{
-            noteBox.append("\n" + editNote.text)
+
+
+            Observable.fromCallable({
+                db = AppDatabase.getAppDataBase(context = this)
+                notesDao = db?.notesDao()
+
+                var notes = Notes(name = editNote.text.toString())
+
+                with(notesDao){
+                    this?.insertNote(notes)
+                }
+                db?.notesDao()?.getNotes()
+            }).doOnNext({ list ->
+                var finalString = ""
+                list?.map { finalString+= it.name+" - " }
+                noteBox.text = finalString
+            })
+
+
+
             editNote.text.clear()
             editNote.visibility = View.INVISIBLE
             noteAdd.visibility = View.INVISIBLE
