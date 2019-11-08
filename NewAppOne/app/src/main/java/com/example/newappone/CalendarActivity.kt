@@ -1,7 +1,9 @@
 
 package com.example.newappone
 
-
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import android.icu.util.Calendar.MONDAY
 import android.os.Build
 import android.os.Bundle
@@ -13,13 +15,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+
 
 
 class CalendarActivity : AppCompatActivity() {
-
 
     private var db: AppDatabase? = null
     private var notesDao: NotesDao? = null
@@ -38,7 +37,12 @@ class CalendarActivity : AppCompatActivity() {
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
         val noteAdd = findViewById<Button>(R.id.noteAdd)
 
-        //Sets the calenderview to have Monday as the first day of the week.
+        db = AppDatabase.getAppDataBase(context = this)
+        notesDao = db?.notesDao()
+
+
+
+        //Sets the calenderView to have Monday as the first day of the week.
         calendarView.firstDayOfWeek = MONDAY
 
         //Makes the editable note box and noteAdd button invisible from the start until
@@ -66,7 +70,6 @@ class CalendarActivity : AppCompatActivity() {
                 noteBox.visibility = View.VISIBLE
             }
         }
-
         noteAdd.setOnClickListener {
             // Collects input data
             var noteText = editNote.text.toString()
@@ -97,6 +100,8 @@ class CalendarActivity : AppCompatActivity() {
                 .subscribe()
             editNote.text.clear()
         }
+
+
 
     }
 }
