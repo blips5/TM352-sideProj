@@ -14,6 +14,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class CalendarActivity : AppCompatActivity() {
@@ -65,31 +67,35 @@ class CalendarActivity : AppCompatActivity() {
             }
         }
 
-        noteAdd.setOnClickListener{
+        noteAdd.setOnClickListener {
+            // Collects input data
+            var noteText = editNote.text.toString()
 
-
-            Observable.fromCallable{
-                db = AppDatabase.getAppDataBase(context = this)
-                notesDao = db?.notesDao()
-
-                var notes = Notes(name = editNote.text.toString())
-
-                with(notesDao){
-                    this?.insertNote(notes)
-                }
-                db?.notesDao()?.getNotes()
-            }.doOnNext{ list ->
-                var finalString = ""
-                list?.map { finalString+= it.name+" - " }
-                noteBox.text = finalString
-            }
-
-
-
-            editNote.text.clear()
+            //noteBox.append("\n" + noteText)
             editNote.visibility = View.INVISIBLE
             noteAdd.visibility = View.INVISIBLE
             noteBox.visibility = View.VISIBLE
+
+
+            Observable.fromCallable{
+                var notes = Notes(name = noteText)
+
+                with(notesDao) {
+                    this?.insertNote(notes)
+                }
+                db?.notesDao()?.getNotes()
+            }.doOnNext{
+                // prints full list of notes in the database table Notes
+                // needs changing to get a single note by date
+                    list -> var finalString = " "
+                list?.map { finalString+= it.name+ " - "}
+                // Adds string to note box
+                noteBox.text = finalString
+
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+            editNote.text.clear()
         }
 
     }
