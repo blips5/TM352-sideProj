@@ -68,7 +68,7 @@ class CalendarActivity : AppCompatActivity() {
         noteAdd.setOnClickListener{
 
 
-            Observable.fromCallable({
+            Observable.fromCallable{
                 db = AppDatabase.getAppDataBase(context = this)
                 notesDao = db?.notesDao()
 
@@ -78,11 +78,11 @@ class CalendarActivity : AppCompatActivity() {
                     this?.insertNote(notes)
                 }
                 db?.notesDao()?.getNotes()
-            }).doOnNext({ list ->
+            }.doOnNext{ list ->
                 var finalString = ""
                 list?.map { finalString+= it.name+" - " }
                 noteBox.text = finalString
-            })
+            }
 
 
 
